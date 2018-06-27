@@ -4,15 +4,20 @@ import { Field, reduxForm } from 'redux-form';
 class PostsNew extends Component {
 
   renderField(field){
+    const { meta: { touched, error } } = field
+    const className = `form-group ${touched && error ? 'has-danger' : ''}`;
+
     return(
-      <div className="form-group">
+      <div className={className}>
         <label>{field.label}</label>
         <input
           className="form-control"
           type="text"
           {...field.input}
         />
-        {field.meta.error}
+        <div className="text-help">
+          {touched ? error : ''}        {/*if user has touched the input and focused away from it (field.meta.touched and field.meta.error)*/}
+        </div>
       </div>
     )
   }
@@ -24,7 +29,7 @@ class PostsNew extends Component {
   render(){
     const { handleSubmit } = this.props;
     return(
-      <form onSubmit={ handleSubmit(this.onSubmit.bind(this))}>
+      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
         <Field 
           label="Title"
           name="title"
@@ -65,3 +70,5 @@ export default reduxForm({
   validate,                                       // validate: validate,
   form: "PostsNewForm"
 })(PostsNew);
+
+//redux-form is responsible for handling state and validation. Not responsible for making post request
